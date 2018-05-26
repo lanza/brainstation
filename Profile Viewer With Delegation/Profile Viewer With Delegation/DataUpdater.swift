@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol DataUpdater {
+protocol DataUpdater: class {
     func updateData(newData: Describable)
 }

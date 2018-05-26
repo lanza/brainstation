@@ -10,8 +10,7 @@ import UIKit
 
 class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
-    var delegate: DataUpdater?
-    var updateData: ((Person) -> ())?
+    weak var delegate: DataUpdater?
     var model: Describable?
     
     @IBOutlet var profilePicture: UIImageView!
@@ -45,16 +44,31 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if let newModel = model {
-        self.delegate?.updateData(newData: newModel)
+        self.model?.name = textField.text
+        self.title = textField.text
+        if let updatedModel = self.model {
+            self.delegate?.updateData(newData: updatedModel)
         }
     }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"  // Recognizes enter key in keyboard
+        {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
     func textViewDidEndEditing(_ textView: UITextView) {
-        if let newModel = model {
-            self.delegate?.updateData(newData: newModel)
+        self.model?.description = textView.text
+        if let updatedModel = self.model {
+            self.delegate?.updateData(newData: updatedModel)
         }
     }
 

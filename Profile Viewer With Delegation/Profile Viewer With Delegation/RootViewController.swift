@@ -10,12 +10,6 @@ import UIKit
 
 class RootViewController: UIViewController, DataUpdater {
     
-    func updateData(newData: Describable) {
-        self.person.name = newData.name
-        self.person.description = newData.description
-    }
-    
-    
 
     @IBOutlet var circleProfilePicture: UIImageView!
     @IBOutlet var truncatedDescription: UILabel!
@@ -24,20 +18,30 @@ class RootViewController: UIViewController, DataUpdater {
     var person: Describable = Person(name: "Eric Lanza",
                                       description: "I am the Production Manager at my church in Boca Raton, Fl.  I started to teach myself swift in my free time.",
                                       imageName: "eric-lanza")
+   
+    func updateData(newData: Describable) {
+        self.person.name = newData.name
+        self.person.description = newData.description
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        self.title = self.person.name
+        
         
         self.circleProfilePicture.layer.cornerRadius = self.circleProfilePicture.frame.size.width / 2.0
         self.circleProfilePicture.clipsToBounds = true
         
-        self.truncatedDescription.text = person.description
+        
         self.circleProfilePicture.image = UIImage(named: self.person.imageName)
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.title = self.person.name
+        self.truncatedDescription.text = person.description
     }
 
     override func didReceiveMemoryWarning() {
