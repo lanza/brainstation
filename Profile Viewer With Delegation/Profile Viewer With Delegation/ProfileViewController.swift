@@ -10,6 +10,8 @@ import UIKit
 
 class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
 
+    var delegate: DataUpdater?
+    var updateData: ((Person) -> ())?
     var model: Describable?
     
     @IBOutlet var profilePicture: UIImageView!
@@ -45,10 +47,17 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField == userName {
-            self.model?.name = textField.text
+        if let newModel = model {
+        self.delegate?.updateData(newData: newModel)
         }
     }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if let newModel = model {
+            self.delegate?.updateData(newData: newModel)
+        }
+    }
+
 
     /*
     // MARK: - Navigation

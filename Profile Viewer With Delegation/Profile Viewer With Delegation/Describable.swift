@@ -9,7 +9,7 @@
 import Foundation
 
 protocol Describable {
-    var name: String? { get }
-    var description: String? { get }
-    var imageName: String { get }
+    var name: String? { get set }
+    var description: String? { get set}
+    var imageName: String { get set}
 }

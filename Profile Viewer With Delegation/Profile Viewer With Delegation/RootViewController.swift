@@ -8,17 +8,22 @@
 
 import UIKit
 
-class RootViewController: UIViewController, UpdateData {
+class RootViewController: UIViewController, DataUpdater {
+    
+    func updateData(newData: Describable) {
+        self.person.name = newData.name
+        self.person.description = newData.description
+    }
+    
     
 
     @IBOutlet var circleProfilePicture: UIImageView!
     @IBOutlet var truncatedDescription: UILabel!
     @IBOutlet var learnMore: UIButton!
     
-    
-    var person = Person(name: "Eric Lanza",
-                        description: "I am the Production Manager at my church in Boca Raton, Fl.  I started to teach myself swift in my free time.",
-                        imageName: "eric-lanza")
+    var person: Describable = Person(name: "Eric Lanza",
+                                      description: "I am the Production Manager at my church in Boca Raton, Fl.  I started to teach myself swift in my free time.",
+                                      imageName: "eric-lanza")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,11 +49,8 @@ class RootViewController: UIViewController, UpdateData {
         
         if let destination = segue.destination as? ProfileViewController {
             destination.model = self.person
+            destination.delegate = self
         }
-    }
-    
-    func updatePerson() {
-        self.person = ????
     }
 
    

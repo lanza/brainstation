@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C5E9E1F20B9D77300901675 /* UpdateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5E9E1E20B9D77300901675 /* UpdateData.swift */; };
+		3C5E9E2120B9F2FE00901675 /* DataUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5E9E2020B9F2FE00901675 /* DataUpdater.swift */; };
 		3CE882BC20B370D100B0BD9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE882BB20B370D100B0BD9D /* AppDelegate.swift */; };
 		3CE882C120B370D100B0BD9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CE882BF20B370D100B0BD9D /* Main.storyboard */; };
 		3CE882C320B370D200B0BD9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CE882C220B370D200B0BD9D /* Assets.xcassets */; };
@@ -19,7 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3C5E9E1E20B9D77300901675 /* UpdateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateData.swift; sourceTree = "<group>"; };
+		3C5E9E2020B9F2FE00901675 /* DataUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUpdater.swift; sourceTree = "<group>"; };
 		3CE882B820B370D100B0BD9D /* Profile Viewer With Delegation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Profile Viewer With Delegation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CE882BB20B370D100B0BD9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3CE882C020B370D100B0BD9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -63,7 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				3CE882CF20B371A400B0BD9D /* Describable.swift */,
-				3C5E9E1E20B9D77300901675 /* UpdateData.swift */,
+				3C5E9E2020B9F2FE00901675 /* DataUpdater.swift */,
 				3CE882CD20B370E900B0BD9D /* Person.swift */,
 				3CE882BB20B370D100B0BD9D /* AppDelegate.swift */,
 				3CE882D120B373A800B0BD9D /* RootViewController.swift */,
@@ -151,8 +151,8 @@
 				3CE882D020B371A400B0BD9D /* Describable.swift in Sources */,
 				3CE882D420B373C600B0BD9D /* ProfileViewController.swift in Sources */,
 				3CE882D220B373A800B0BD9D /* RootViewController.swift in Sources */,
-				3C5E9E1F20B9D77300901675 /* UpdateData.swift in Sources */,
 				3CE882BC20B370D100B0BD9D /* AppDelegate.swift in Sources */,
+				3C5E9E2120B9F2FE00901675 /* DataUpdater.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
