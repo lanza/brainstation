@@ -8,14 +8,15 @@
 
 import UIKit
 
-class RootViewController: UIViewController {
+class RootViewController: UIViewController, UpdateData {
+    
 
     @IBOutlet var circleProfilePicture: UIImageView!
     @IBOutlet var truncatedDescription: UILabel!
     @IBOutlet var learnMore: UIButton!
     
     
-    let person = Person(name: "Eric Lanza",
+    var person = Person(name: "Eric Lanza",
                         description: "I am the Production Manager at my church in Boca Raton, Fl.  I started to teach myself swift in my free time.",
                         imageName: "eric-lanza")
     
@@ -44,6 +45,10 @@ class RootViewController: UIViewController {
         if let destination = segue.destination as? ProfileViewController {
             destination.model = self.person
         }
+    }
+    
+    func updatePerson() {
+        self.person = ????
     }
 
    
