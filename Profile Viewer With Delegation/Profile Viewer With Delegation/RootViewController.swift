@@ -15,8 +15,8 @@ class RootViewController: UIViewController, DataUpdater {
     @IBOutlet var truncatedDescription: UILabel!
     @IBOutlet var learnMore: UIButton!
     
-    var person: Describable = Person(name: "Eric Lanza",
-                                      description: "I am the Production Manager at my church in Boca Raton, Fl.  I started to teach myself swift in my free time.",
+    var person = Person(name: "Eric Lanza",
+                                      description: "I am a Florda born native that is beginning to learn iOs development.",
                                       imageName: "eric-lanza")
    
     func updateData(newData: Describable) {

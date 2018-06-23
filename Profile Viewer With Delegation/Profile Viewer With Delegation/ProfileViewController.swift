@@ -71,7 +71,8 @@ class ProfileViewController: UIViewController, UITextFieldDelegate, UITextViewDe
             self.delegate?.updateData(newData: updatedModel)
         }
     }
-
+    
+    
 
     /*
     // MARK: - Navigation
