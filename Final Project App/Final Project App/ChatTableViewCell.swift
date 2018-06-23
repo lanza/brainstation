@@ -8,9 +8,6 @@
 import UIKit
 
 class ChatTableViewCell: UITableViewCell {
-    
-    @IBOutlet var username: UILabel!
-    @IBOutlet var chatText: UILabel!
-    
-    
+    @IBOutlet var usernameLabel: UILabel!
+    @IBOutlet var chatTextLabel: UILabel!
 }
