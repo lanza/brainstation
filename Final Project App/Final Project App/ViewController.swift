@@ -9,19 +9,17 @@
 import UIKit
 import Alamofire
 
-
-
 class ViewController: UIViewController, UITableViewDataSource {
     
     //    MARK: Set variables for use in functions
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var InputTextField: UITextField!
+    @IBOutlet var inputTextField: UITextField!
     
     var messages: [Message] = []
     var messagesDict: [Int:Message] = [:]
     var kbHeight: CGFloat!
-    var repeatTimer: Timer!
-    
+    var getFromServerTimer: Timer!
+    let chatServerURL = "http://localhost:1337/messages"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,24 +28,18 @@ class ViewController: UIViewController, UITableViewDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
-        self.InputTextField.delegate = self //Assign Text Field Delegate
-        self.tableView.dataSource = self // Assign Table view data source
-        getData() // Call get data function on initial load
-        self.hideKeyboard() // Hide keyboard when tapped
-        tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 30.0, 0.0) // Inset table view scroll to move from behind the keyboard
-        repeatTimer =   Timer.scheduledTimer(timeInterval: 5, target: self,
-                                             selector: #selector(getData), userInfo: nil, repeats: true) // Set timer to get new messages every 5 seconds
-    }
-    
-    //    Mark: Animate viewWillAppear
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        inputTextField.delegate = self
+        tableView.dataSource = self
+        getMessagesFromServer() // Call get data function on initial load
+        installDismissKeyboardGestureRecognizer() // Hide keyboard when tapped
+//        tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 30.0, 0.0) // Inset table view scroll to move from behind the keyboard
+        getFromServerTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in self.getMessagesFromServer() } // Set timer to get new                                                             messages every 5 seconds
     }
     
     //    MARK: - Get New Messages
     
-    @objc func getData() {
-        Alamofire.request("http://localhost:1337/messages").responseJSON { response in
+    @objc func getMessagesFromServer() {
+        Alamofire.request(chatServerURL).responseJSON { response in
             if let json = response.result.value as? [[String: Any?]] {
                 print("JSON: \(json)") // serialized json response
                 
@@ -66,60 +58,50 @@ class ViewController: UIViewController, UITableViewDataSource {
                 }
             }
             self.tableView.reloadData()
-            
         }
     }
     
     //    MARK: - Set Table View Cells for messages
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.messages.count
+        return messages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // create cell
-        if self.messages[indexPath.row].username == "Eric" {
-            let chatCell = tableView.dequeueReusableCell(withIdentifier: "SentTableViewCell", for: indexPath) as! ChatTableViewCell
-            let newText = self.messages[indexPath.row]
-            chatCell.chatText.text = newText.text               // Assign text to chatText
-            chatCell.username.text = newText.username           // Assign text to username
-            chatCell.chatText.sizeToFit()                       // Adjust size of UILabel to fit around text
-            chatCell.chatText.layer.cornerRadius = 5            // Round UI Table View edges
-            chatCell.chatText.layer.masksToBounds = true
-            return chatCell
+        var reuseIdentifier: String
+        if messages[indexPath.row].username == currentUser {
+            reuseIdentifier = "SentTableViewCell"
         } else {
-            let chatCell = tableView.dequeueReusableCell(withIdentifier: "ReceivedTableViewCell", for: indexPath) as! ChatTableViewCell
-            let newText = self.messages[indexPath.row]
-            chatCell.chatText.text = newText.text           // Assign text to chatText
-            chatCell.username.text = newText.username       // Assign text to username
-            chatCell.chatText.sizeToFit()                   // Adjust size of UILabel to fit around text
-            chatCell.chatText.layer.cornerRadius = 5        // Round UI Table View edges
-            chatCell.chatText.layer.masksToBounds = true
-            return chatCell
+            reuseIdentifier = "ReceivedTableViewCell"
         }
+        guard let chatCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? ChatTableViewCell else {
+            fatalError()
+        }
+        let newMessage = messages[indexPath.row]
+        chatCell.chatTextLabel.text = newMessage.text               // Assign text to chatText
+        chatCell.usernameLabel.text = newMessage.username           // Assign text to username
+        chatCell.chatTextLabel.sizeToFit()                       // Adjust size of UILabel to fit around text
+        chatCell.chatTextLabel.layer.cornerRadius = 5            // Round UI Table View edges
+        chatCell.chatTextLabel.layer.masksToBounds = true
+        return chatCell
     }
 }
-
-
 // MARK: - Text Field Delegate
 
 extension ViewController: UITextFieldDelegate {
     
-    
     // Offset Table view if keyboard shows
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
+            if view.frame.origin.y == 0 {
+                view.frame.origin.y -= keyboardSize.height
             }
             if messages.count > 0 {
                 tableView.scrollToRow(at: IndexPath.init(row: messages.count - 1, section: 0),
                                       at: UITableViewScrollPosition.bottom, animated: false) // Scroll to bottom cell when keyboard is selected
             }
         }
-       
     }
-    
     
     //Offset Table view when keyboard hides
     @objc func keyboardWillHide(notification: NSNotification) {
@@ -130,35 +112,26 @@ extension ViewController: UITextFieldDelegate {
         }
     }
     
-    
     // Send data to server and clear textfield when return is pressed 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let newText = InputTextField.text {
-            let newInput: Parameters = ["text" : newText, "username" : "Eric"]
-            Alamofire.request("http://localhost:1337/messages", method: .post, parameters: newInput)
+        if let newText = inputTextField.text {
+            let newInput: Parameters = ["text" : newText, "username" : currentUser as Any]
+            Alamofire.request(chatServerURL, method: .post, parameters: newInput)
         }
-        InputTextField.text = ""
+        inputTextField.text = ""
         return true
     }
-    
 }
 
 //MARK: - Hide Keyboard on tap outside of textfield
-extension UIViewController
-{
-    func hideKeyboard()
-    {
+extension UIViewController {
+    func installDismissKeyboardGestureRecognizer() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(UIViewController.dismissKeyboard))
-        
         view.addGestureRecognizer(tap)
     }
-    
-    @objc func dismissKeyboard()
-    {
+    @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 }
-
-

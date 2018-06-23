@@ -8,14 +8,21 @@
 
 import UIKit
 
+var currentUser: String?
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    func getCurrentUser() {
+        // implement latter
+        currentUser = "Eric"
+    }
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        getCurrentUser()
         return true
     }
 
